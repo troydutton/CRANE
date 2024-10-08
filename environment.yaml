@@ -1,0 +1,24 @@
+name: find
+channels:
+  - conda-forge
+  - pytorch
+  - nvidia
+dependencies:
+  - python==3.10
+  - pip
+  - pytorch
+  - pytorch-cuda=11.8
+  - cudatoolkit=11.8
+  - numpy
+  - pandas
+  - scikit-learn
+  - transformers
+  - sentencepiece
+  - protobuf
+  - wandb
+  - networkx
+  - datasets
+  - ipykernel
+  - tqdm
+  - pytables
+  - torchmetrics
