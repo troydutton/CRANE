@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
-from torch_geometric.data import Batch
+from torch_geometric.data import Data
 from torch_geometric.nn import GCNConv
 
 
@@ -12,10 +12,14 @@ class GCN(nn.Module):
         self.conv1 = GCNConv(in_channels, hidden_channels)
         self.conv2 = GCNConv(hidden_channels, out_channels)
 
-    def forward(self, data: Batch) -> Tensor:
-        x, edge_index = data.x, data.edge_index
-        x = self.conv1(x, edge_index)
+    def forward(self, graph: Data) -> Tensor:
+        x, edges = graph.x, graph.edge_index
+
+        # First layer
+        x = self.conv1(x, edges)
         x = F.relu(x)
-        x = self.conv2(x, edge_index)
+
+        # Second layer
+        x = self.conv2(x, edges)
 
         return x
