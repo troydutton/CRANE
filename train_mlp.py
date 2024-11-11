@@ -22,7 +22,7 @@ data = RandomNodeSplit(num_val=0.25, num_test=0, key="credibility")(data)
 model = MultiLayerPerceptron(input_dim=data.num_features, hidden_dims=[16, 16], output_dim=2)
 
 # Define the optimizer
-optimizer = optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.AdamW(model.parameters(), lr=0.01, weight_decay=0.1)
 
 # Initialize WandB
 wandb.init(project="FIND", name="MLP", tags=("MLP",))

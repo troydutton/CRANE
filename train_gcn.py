@@ -1,6 +1,5 @@
 import networkx as nx
 from torch import optim
-from torch.nn import CrossEntropyLoss
 from torch_geometric.transforms import RandomNodeSplit
 from torch_geometric.utils.convert import from_networkx
 
@@ -23,7 +22,7 @@ data = RandomNodeSplit(num_val=0.25, num_test=0, key="credibility")(data)
 model = GCN(in_channels=data.num_features, hidden_channels=16, out_channels=2)
 
 # Define the optimizer
-optimizer = optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.Adam(model.parameters(), lr=0.0005)
 
 # Initialize WandB
 wandb.init(project="FIND", name="GCN", tags=("GCN",))
