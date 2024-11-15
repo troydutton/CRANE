@@ -3,18 +3,23 @@ channels:
   - conda-forge
   - pytorch
   - nvidia
+  - pyg
 dependencies:
   - python==3.10
   - pip
-  - pytorch
+  - pytorch==2.2.*
   - pytorch-cuda=11.8
   - cudatoolkit=11.8
   - numpy
   - pandas
   - scikit-learn
+  - sentence-transformers
+  - tf-keras
+  - pyg
   - transformers
   - sentencepiece
-  - protobuf
+  - peft>=0.10
+  - protobuf>=5.0
   - wandb
   - networkx
   - datasets

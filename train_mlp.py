@@ -1,5 +1,5 @@
 import networkx as nx
-from torch import optim
+from torch import nn, optim
 from torch_geometric.transforms import RandomNodeSplit
 from torch_geometric.utils.convert import from_networkx
 
@@ -14,23 +14,29 @@ set_random_seed(42)
 graph = nx.read_gexf('data/reddit.gexf')
 
 # Convert to PyTorch Geometric data object
-data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"])
+# data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"])
+embed_dim = 384
+data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree", *[f"embedding_{i}" for i in range(embed_dim)]])
 
 data = RandomNodeSplit(num_val=0.25, num_test=0, key="credibility")(data)
 
 # Initialize the model
-model = MultiLayerPerceptron(input_dim=data.num_features, hidden_dims=[16, 16], output_dim=2)
+model = MultiLayerPerceptron(input_dim=data.num_features, hidden_dims=[8, 8], output_dim=2)
 
 # Define the optimizer
 optimizer = optim.AdamW(model.parameters(), lr=0.01, weight_decay=0.1)
 
+criterion = nn.CrossEntropyLoss()
+
 # Initialize WandB
-wandb.init(project="FIND", name="MLP", tags=("MLP",))
+wandb.init(project="FIND", name="MLP Post Embeddings", tags=("MLP",))
 
 # Train the model
 train(
     model=model,
     data=data,
     optimizer=optimizer,
-    epochs=100
+    criterion=criterion,
+    epochs=50,
+    credibility_threshold=0.5
 )
