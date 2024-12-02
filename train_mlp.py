@@ -13,10 +13,7 @@ set_random_seed(42)
 # Load graph
 graph = nx.read_gexf('data/reddit.gexf')
 
-# Convert to PyTorch Geometric data object
-# data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"])
-embed_dim = 384
-data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree", *[f"embedding_{i}" for i in range(embed_dim)]])
+data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"])
 
 data = RandomNodeSplit(num_val=0.25, num_test=0, key="credibility")(data)
 
