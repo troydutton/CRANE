@@ -18,7 +18,6 @@ plt.xticks(y_pos, models, fontsize=12)
 plt.yticks(fontsize=12)
 plt.xlabel('Model', fontsize=14, fontweight='bold')
 plt.ylabel('Accuracy (%)', fontsize=14, fontweight='bold')
-plt.title('Model Accuracy Comparison', fontsize=16, fontweight='bold')
 
 # Adjust y-axis range and add grid
 plt.ylim(50, 100)
