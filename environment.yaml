@@ -1,4 +1,4 @@
-name: find
+name: crane
 channels:
   - conda-forge
   - pytorch
