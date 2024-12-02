@@ -10,20 +10,15 @@ class GCN(nn.Module):
         super(GCN, self).__init__()
         
         self.conv1 = GCNConv(in_channels, hidden_channels)
-        self.conv2 = GCNConv(hidden_channels, hidden_channels)
         self.conv3 = GCNConv(hidden_channels, out_channels)
 
     def forward(self, graph: Data) -> Tensor:
-        x, edges = graph.x, graph.edge_index
+        x, edge_index, edge_weight = graph.x, graph.edge_index, graph.edge_attr
 
         # First layer
-        x = self.conv1(x, edges)
+        x = self.conv1(x, edge_index, edge_weight)
         x = F.relu(x)
 
-        # Second layer
-        x = self.conv2(x, edges)
-        x = F.relu(x)
-
-        x = self.conv3(x, edges)
+        x = self.conv3(x, edge_index, edge_weight)
 
         return x
