@@ -8,21 +8,23 @@ from model.gcn import GCN
 from utils.misc import set_random_seed
 from utils.processor import train
 
+GRAPH_PATH = "data/weighted.gexf"
+GRAPH_TYPE = "unweighted"
+
 set_random_seed(42)
 
 # Load graph
 print("Loading graph...")
-graph = nx.read_gexf('data/weighted_temp.gexf')
+graph = nx.read_gexf(GRAPH_PATH)
 
-# Unweighted
-data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"])
+if GRAPH_TYPE == "unweighted": # Unweighted
+    data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"])
+elif GRAPH_TYPE == "embeddings": # Unweighted w/ embeddings
+    data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree", *[f"embedding_{i}" for i in range(384)]])
+elif GRAPH_TYPE == "weighted": # Weighted
+    data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"], group_edge_attrs=["weight"])
 
-# Unweighted w/ embeddings
-# data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree", *[f"embedding_{i}" for i in range(embed_dim := 384)]])
-
-# Weighted
-# data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"], group_edge_attrs=["weight"])
-
+# Split the nodes into a training and validation set
 data = RandomNodeSplit(num_val=0.25, num_test=0, key="credibility")(data)
 
 frequencies = (data.credibility > 0.5).to(int).bincount(minlength=2)
@@ -36,7 +38,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=1e-2)
 
 criterion = nn.CrossEntropyLoss(weight=weights)
 
-# Initialize WandB
+# Initialize W&B
 wandb.init(project="CRANE", name="GCN", tags=("GCN",))
 
 # Train the model

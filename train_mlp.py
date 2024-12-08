@@ -11,7 +11,7 @@ from utils.processor import train
 set_random_seed(42)
 
 # Load graph
-graph = nx.read_gexf('data/reddit.gexf')
+graph = nx.read_gexf('data/unweighted.gexf')
 
 data = from_networkx(graph, group_node_attrs=["betweenness", "clustering", "degree"])
 
