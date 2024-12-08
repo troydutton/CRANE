@@ -19,6 +19,8 @@ conda activate crane
 wandb login
 ```
 
+4. Place Reddit data into the `data/` folder.
+
 ## Usage
 
 1. Create the user-to-user network:
